@@ -5,28 +5,32 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
-class Genre(models.Model):
+class TimeStampedMixin(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        # Этот параметр указывает Django, 
+        # что этот класс не является представлением таблицы
+        abstract = True
+
+
+class UUIDMixin(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class Genre(UUIDMixin, TimeStampedMixin):
 
     def __str__(self):
         return self.name
 
-    # Типичная модель в Django использует число в качестве id.
-    # В таких ситуациях поле не описывается в модели.
-
-    # Вам же придётся явно объявить primary key.
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    # Первым аргументом обычно идёт человекочитаемое название поля
     name = models.CharField('name', max_length=255)
 
     # blank=True делает поле необязательным для заполнения.
     description = models.TextField('description', blank=True)
-
-    # auto_now_add автоматически выставит дату создания записи
-    created = models.DateTimeField(auto_now_add=True)
-
-    # auto_now изменятся при каждом обновлении записи
-    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         # Ваши таблицы находятся в нестандартной схеме.
@@ -38,7 +42,8 @@ class Genre(models.Model):
         verbose_name_plural = 'Жанры'
 
 
-class FilmWork(models.Model):
+class FilmWork(UUIDMixin, TimeStampedMixin):
+    genres = models.ManyToManyField(Genre, through='GenreFilmwork')
 
     def __str__(self):
         return self.title
@@ -57,7 +62,6 @@ class FilmWork(models.Model):
         MOVIES = 'MOVIES'
         TV_SHOW = 'TV_SHOW'
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField('title', max_length=255)
     description = models.TextField('description', blank=True)
     creation_date = models.DateField('creation_date')
@@ -65,11 +69,18 @@ class FilmWork(models.Model):
         'rating',
         validators=[validate_interval],
         blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
     type = models.CharField('type', choices=MoviesType.choices, max_length=7)
 
     class Meta:
         db_table = "content\".\"film_work"
         verbose_name = 'Кинопроизведение'
         verbose_name_plural = 'Кинопроизведения'
+
+
+class GenreFilmwork(UUIDMixin):
+    film_work = models.ForeignKey('Filmwork', on_delete=models.CASCADE)
+    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "content\".\"genre_film_work"

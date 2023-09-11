@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Genre, FilmWork
+from .models import Genre, FilmWork, GenreFilmwork
 
 
 # Register your models here.
@@ -8,6 +8,10 @@ class GenreAdmin(admin.ModelAdmin):
     pass
 
 
+class GenreFilmworkInline(admin.TabularInline):
+    model = GenreFilmwork
+
+
 @admin.register(FilmWork)
 class FilmWorkAdmin(admin.ModelAdmin):
-    pass
+    inlines = (GenreFilmworkInline,)
