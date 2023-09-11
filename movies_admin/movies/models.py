@@ -84,3 +84,23 @@ class GenreFilmwork(UUIDMixin):
 
     class Meta:
         db_table = "content\".\"genre_film_work"
+
+
+class Person(UUIDMixin, TimeStampedMixin):
+    full_name = models.CharField('full_name', max_length=255)
+
+    def __str__(self):
+        return self.full_name
+
+    class Meta:
+        db_table = "content\".\"person"
+
+
+class PersonFilmwork(UUIDMixin):
+    film_work = models.ForeignKey('Filmwork', on_delete=models.CASCADE)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE)
+    role = models.TextField('role', null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "content\".\"person_film_work"
