@@ -39,7 +39,7 @@ CREATE UNIQUE INDEX film_work_person_idx ON content.person_film_work (film_work_
 CREATE TABLE IF NOT EXISTS content.genre_film_work (
     id uuid PRIMARY KEY,
     genre_id uuid REFERENCES content.genre(id),
-    film_work_ud uuid REFERENCES content.film_work(id),
+    film_work_id uuid REFERENCES content.film_work(id),
     created timestamp with time zone
 );
 
