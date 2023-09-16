@@ -94,6 +94,8 @@ class Person(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = "content\".\"person"
+        verbose_name = 'Актер'
+        verbose_name_plural = 'Актеры'
 
 
 class PersonFilmwork(UUIDMixin):
