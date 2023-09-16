@@ -59,7 +59,7 @@ class FilmWork(UUIDMixin, TimeStampedMixin):
                 params={'value': value})
 
     class MoviesType(models.TextChoices):
-        MOVIES = _('MOVIES')
+        MOVIES = _('movie')
         TV_SHOW = _('TV_SHOW')
 
     title = models.CharField(_('title'), max_length=255)
@@ -88,7 +88,7 @@ class GenreFilmwork(UUIDMixin):
 
 class Person(UUIDMixin, TimeStampedMixin):
     full_name = models.CharField(_('full_name'), max_length=255)
-    
+
     def __str__(self):
         return self.full_name
 
