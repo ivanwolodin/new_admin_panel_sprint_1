@@ -1,0 +1,92 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-16 09:19+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: movies/apps.py:7
+msgid "movies"
+msgstr ""
+
+#: movies/models.py:30
+msgid "name"
+msgstr ""
+
+#: movies/models.py:33 movies/models.py:66
+msgid "description"
+msgstr ""
+
+#: movies/models.py:41
+msgid "genre"
+msgstr ""
+
+#: movies/models.py:42
+msgid "genres"
+msgstr ""
+
+#: movies/models.py:56
+#, python-brace-format
+msgid "Rating must be in range between [{0}, {1}]"
+msgstr ""
+
+#: movies/models.py:62
+msgid "MOVIES"
+msgstr "Movies"
+
+#: movies/models.py:63
+msgid "TV_SHOW"
+msgstr "TV Show"
+
+#: movies/models.py:65
+msgid "title"
+msgstr ""
+
+#: movies/models.py:67
+msgid "creation_date"
+msgstr ""
+
+#: movies/models.py:69
+msgid "rating"
+msgstr ""
+
+#: movies/models.py:72
+msgid "type"
+msgstr ""
+
+#: movies/models.py:76
+msgid "piece of art"
+msgstr ""
+
+#: movies/models.py:77
+msgid "pieces of arts"
+msgstr ""
+
+#: movies/models.py:90
+msgid "full_name"
+msgstr "name"
+
+#: movies/models.py:97
+msgid "actor"
+msgstr ""
+
+#: movies/models.py:98
+msgid "actors"
+msgstr ""
+
+#: movies/models.py:104
+msgid "role"
+msgstr ""
