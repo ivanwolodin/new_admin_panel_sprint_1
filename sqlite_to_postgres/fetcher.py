@@ -91,4 +91,5 @@ class SQLiteExtractor:
                 'person_film_work': self._fetch_person_film_works(),
             }
         except Exception as e:
+            # TODO: add logger instead of print()
             print('Cannot fetch data. Exception: {0}'.format(e))
