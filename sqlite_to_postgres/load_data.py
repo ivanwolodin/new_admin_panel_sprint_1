@@ -15,11 +15,16 @@ load_dotenv()
 
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
     """Основной метод загрузки данных из SQLite в Postgres"""
+    print('Starting working')
     postgres_saver = PostgresSaver(pg_conn)
     sqlite_extractor = SQLiteExtractor(connection)
 
+    print('Downloading from sqlite base')
     data = sqlite_extractor.extract_movies()
+    print('Downloaded sqlite')
+    print('Uploading to Postgres')
     postgres_saver.save_all_data(data)
+    print('Data shifted')
 
 
 if __name__ == '__main__':

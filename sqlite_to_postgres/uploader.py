@@ -153,9 +153,11 @@ class PostgresSaver:
 
     def save_all_data(self, data: dict) -> bool:
         self._data_to_upload = data
-
-        self._upload_film_works()
-        self._upload_persons()
-        self._upload_genres()
-        self._upload_person_film_works()
-        self._upload_genre_film_works()
+        try:
+            self._upload_film_works()
+            self._upload_persons()
+            self._upload_genres()
+            self._upload_person_film_works()
+            self._upload_genre_film_works()
+        except Exception as e:
+            print('Cannot upsert data: Error: {0}'.format(e))
