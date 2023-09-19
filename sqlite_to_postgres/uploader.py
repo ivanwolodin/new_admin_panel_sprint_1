@@ -1,57 +1,63 @@
-import sys
-
 from psycopg2.extensions import connection as _connection
+
 
 class PostgresSaver:
     def __init__(self, pg_conn: _connection):
         self._conn = pg_conn
         self._cursor = self._conn.cursor()
-        self._data_to_upload = dict()
-    
+        self._data_to_upload = {}
+
+        self._function_by_table = {
+            'film_work': self._upload_film_works,
+            'genre': self._upload_genres,
+            'person': self._upload_persons,
+            'genre_film_work': self._upload_genre_film_works,
+            'person_film_work': self._upload_person_film_works,
+        }
+
     def _upload_film_works(self):
         try:
-            items = self._data_to_upload['film_work']
             args = ','.join(
-                self._cursor.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s)", 
-                                     (item.id, 
-                                      item.title, 
-                                      item.description, 
-                                      item.creation_date, 
-                                      item.rating, 
-                                      item.type, 
-                                      item.created_at,
-                                      item.updated_at)).decode() 
-                for item in items
+                self._cursor.mogrify('(%s, %s, %s, %s, %s, %s, %s, %s)',
+                    (item.id,
+                     item.title,
+                     item.description,
+                     item.creation_date,
+                     item.rating,
+                     item.type,
+                     item.created_at,
+                     item.updated_at),
+                    ).decode()
+                for item in self._data_to_upload
             )
             self._cursor.execute(f"""
                                 INSERT INTO content.film_work (
-                                 id, 
-                                 title, 
-                                 description, 
-                                 creation_date, 
-                                 rating, 
-                                 type, 
-                                 created, 
+                                 id,
+                                 title,
+                                 description,
+                                 creation_date,
+                                 rating,
+                                 type,
+                                 created,
                                  modified
                                 ) 
                                 VALUES {args}
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print("Cannot upsert in film_works. Error: {0}".format(e))
+            print('Cannot upsert in film_works. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
             
     def _upload_persons(self):
         try:
-            items = self._data_to_upload['person']
             args = ','.join(
-                self._cursor.mogrify("(%s, %s, %s, %s)", 
+                self._cursor.mogrify('(%s, %s, %s, %s)', 
                                      (item.id, 
                                       item.full_name, 
                                       item.created_at,
                                       item.updated_at)).decode() 
-                for item in items
+                for item in self._data_to_upload
             )
             self._cursor.execute(f"""
                                 INSERT INTO content.person (
@@ -64,21 +70,20 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print("Cannot upsert in person. Error: {0}".format(e))
+            print('Cannot upsert in person. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
 
     def _upload_genres(self):
         try:
-            items = self._data_to_upload['genre']
             args = ','.join(
-                self._cursor.mogrify("(%s, %s, %s, %s, %s)", 
+                self._cursor.mogrify('(%s, %s, %s, %s, %s)', 
                                      (item.id, 
                                       item.name, 
                                       item.description, 
                                       item.created_at,
                                       item.updated_at)).decode() 
-                for item in items
+                for item in self._data_to_upload
             )
             self._cursor.execute(f"""
                                 INSERT INTO content.genre (
@@ -92,21 +97,20 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print("Cannot upsert in genre. Error: {0}".format(e))
+            print('Cannot upsert in genre. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
 
     def _upload_person_film_works(self):
         try:
-            items = self._data_to_upload['person_film_work']
             args = ','.join(
-                self._cursor.mogrify("(%s, %s, %s, %s, %s)", 
+                self._cursor.mogrify('(%s, %s, %s, %s, %s)', 
                                      (item.id, 
                                       item.film_work_id, 
                                       item.person_id, 
                                       item.created_at,
                                       item.role)).decode() 
-                for item in items
+                for item in self._data_to_upload
             )
             self._cursor.execute(f"""
                                 INSERT INTO content.person_film_work (
@@ -120,21 +124,20 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print("Cannot upsert in person_film_work. Error: {0}".format(e))
+            print('Cannot upsert in person_film_work. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
 
     def _upload_genre_film_works(self):
         try:
-            items = self._data_to_upload['genre_film_work']
             args = ','.join(
-                self._cursor.mogrify("(%s, %s, %s, %s)", 
+                self._cursor.mogrify('(%s, %s, %s, %s)', 
                                      (item.id, 
                                       item.genre_id, 
                                       item.film_work_id, 
                                       item.created_at
                                       )).decode() 
-                for item in items
+                for item in self._data_to_upload
             )
             self._cursor.execute(f"""
                                 INSERT INTO content.genre_film_work (
@@ -147,17 +150,13 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print("Cannot upsert in genre_film_work. Error: {0}".format(e))
+            print('Cannot upsert in genre_film_work. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
 
-    def save_all_data(self, data: dict) -> bool:
-        self._data_to_upload = data
+    def save_data(self, data: dict) -> bool:
+        self._data_to_upload = data['res']
         try:
-            self._upload_film_works()
-            self._upload_persons()
-            self._upload_genres()
-            self._upload_person_film_works()
-            self._upload_genre_film_works()
+            self._function_by_table[data['postgres_table']]()
         except Exception as e:
             print('Cannot upsert data: Error: {0}'.format(e))

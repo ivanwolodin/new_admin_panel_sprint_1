@@ -1,7 +1,9 @@
 # Create your models here.
+
 import uuid
-from django.db import models
+
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -10,7 +12,7 @@ class TimeStampedMixin(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # Этот параметр указывает Django, 
+        # Этот параметр указывает Django,
         # что этот класс не является представлением таблицы
         abstract = True
 
@@ -29,7 +31,7 @@ class Person(UUIDMixin, TimeStampedMixin):
         return self.full_name
 
     class Meta:
-        db_table = "content\".\"person"
+        db_table = 'content\'.\'person'
         verbose_name = _('actor')
         verbose_name_plural = _('actors')
 
@@ -48,7 +50,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
         # Ваши таблицы находятся в нестандартной схеме.
         # Это нужно указать в классе модели
 
-        db_table = "content\".\"genre"
+        db_table = 'content\'.\'genre'
         # Следующие два поля отвечают за название модели в интерфейсе
         verbose_name = _('genre')
         verbose_name_plural = _('genres')
@@ -60,7 +62,7 @@ class GenreFilmwork(UUIDMixin):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "content\".\"genre_film_work"
+        db_table = 'content\'.\'genre_film_work'
 
 
 class PersonFilmwork(UUIDMixin):
@@ -70,10 +72,14 @@ class PersonFilmwork(UUIDMixin):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "content\".\"person_film_work"
+        db_table = 'content\'.\'person_film_work'
         constraints = [
-            models.UniqueConstraint(fields=['role', 'person_id', 'film_work_id'], name='film_work_person_idx_role')
+            models.UniqueConstraint(
+                fields=['role', 'person_id', 'film_work_id'],
+                name='film_work_person_idx_role',
+            ),
         ]
+
 
 class FilmWork(UUIDMixin, TimeStampedMixin):
     genres = models.ManyToManyField(Genre, through='GenreFilmwork')
@@ -82,15 +88,18 @@ class FilmWork(UUIDMixin, TimeStampedMixin):
     def __str__(self):
         return self.title
 
-    def validate_interval(value):
+    def validate_interval(rating_value):
         min_value = 1.0
         max_value = 10.0
-        if value < min_value or value > max_value:
+        if rating_value < min_value or rating_value > max_value:
             raise ValidationError(
                 _('Rating must be in range between [{0}, {1}]'.format(
                     min_value,
-                    max_value)),
-                params={'value': value})
+                    max_value,
+                ),
+                ),
+                params={'value': rating_value},
+            )
 
     class MoviesType(models.TextChoices):
         MOVIES = _('movie')
@@ -102,10 +111,15 @@ class FilmWork(UUIDMixin, TimeStampedMixin):
     rating = models.FloatField(
         _('rating'),
         validators=[validate_interval],
-        blank=True)
-    type = models.CharField(_('type'), choices=MoviesType.choices, max_length=7)
+        blank=True,
+    )
+    type = models.CharField(
+        _('type'),
+        choices=MoviesType.choices,
+        max_length=7,
+    )
 
     class Meta:
-        db_table = "content\".\"film_work"
+        db_table = 'content\'.\'film_work'
         verbose_name = _('piece of art')
         verbose_name_plural = _('pieces of arts')

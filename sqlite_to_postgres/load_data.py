@@ -1,30 +1,21 @@
 import os
 
+import psycopg2
 import sqlite3
 
-import psycopg2
 from psycopg2.extensions import connection as _connection
 from psycopg2.extras import DictCursor
-
 from dotenv import load_dotenv
 
-from fetcher import SQLiteExtractor
-from uploader import PostgresSaver 
+from data_transfer import DataTransfer
 
 load_dotenv()
 
+
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
     """Основной метод загрузки данных из SQLite в Postgres"""
-    print('Starting working')
-    postgres_saver = PostgresSaver(pg_conn)
-    sqlite_extractor = SQLiteExtractor(connection)
-
-    print('Downloading from sqlite base')
-    data = sqlite_extractor.extract_movies()
-    print('Downloaded sqlite')
-    print('Uploading to Postgres')
-    postgres_saver.save_all_data(data)
-    print('Data shifted')
+    data_transfer_obj = DataTransfer(connection, pg_conn)
+    data_transfer_obj.transfer_data()
 
 
 if __name__ == '__main__':

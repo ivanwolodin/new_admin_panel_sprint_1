@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Genre, FilmWork, GenreFilmwork, PersonFilmwork, Person
+from models import (
+    FilmWork,
+    Genre,
+    GenreFilmwork,
+    Person,
+    PersonFilmwork,
+)
 
 
 # Register your models here.
@@ -23,13 +29,13 @@ class PersonAdmin(admin.ModelAdmin):
 
 @admin.register(FilmWork)
 class FilmWorkAdmin(admin.ModelAdmin):
-    inlines = (GenreFilmworkInline, PersonFilmworkInline,)
+    inlines = (GenreFilmworkInline, PersonFilmworkInline)
 
     # Отображение полей в списке
-    list_display = ('title', 'type', 'creation_date', 'rating',)
-    
+    list_display = ('title', 'type', 'creation_date', 'rating')
+
     # Фильтрация в списке
-    list_filter = ('type', 'rating',) 
-    
+    list_filter = ('type', 'rating')
+
     # Поиск по полям
     search_fields = ('title', 'description', 'id')
