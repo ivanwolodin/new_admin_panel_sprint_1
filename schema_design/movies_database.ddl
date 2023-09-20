@@ -28,18 +28,19 @@ CREATE TABLE IF NOT EXISTS content.person (
 
 CREATE TABLE IF NOT EXISTS content.person_film_work (
     id uuid PRIMARY KEY,
-    film_work_id uuid NOT NULL,
-    person_id uuid NOT NULL,
+    film_work_id uuid NOT NULL REFERENCES content.film_work(id) ON DELETE CASCADE,
+    person_id uuid NOT NULL REFERENCES content.person(id) ON DELETE CASCADE,
     role TEXT NOT NULL,
     created timestamp with time zone
 );
 
-CREATE UNIQUE INDEX role_film_work_person_idx ON content.person_film_work (film_work_id, person_id, role);
+CREATE UNIQUE INDEX IF NOT EXISTS role_film_work_person_idx ON content.person_film_work (film_work_id, person_id, role);
 
 CREATE TABLE IF NOT EXISTS content.genre_film_work (
     id uuid PRIMARY KEY,
-    genre_id uuid REFERENCES content.genre(id),
-    film_work_id uuid REFERENCES content.film_work(id),
+    genre_id uuid REFERENCES content.genre(id) ON DELETE CASCADE,
+    film_work_id uuid REFERENCES content.film_work(id) ON DELETE CASCADE ,
     created timestamp with time zone
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS film_work_genre ON content.genre_film_work (film_work_id, genre_id);
