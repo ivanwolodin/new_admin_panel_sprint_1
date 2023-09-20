@@ -38,7 +38,8 @@ def fetch_sql_table_row_numbers(sqlite_conn: sqlite3.Connection, table_name: str
     cursor.execute('SELECT COUNT(*) FROM {0};'.format(table_name))
     return cursor.fetchone()[0]
 
-@pytest.mark.parametrize("database_name",database_names)
+@pytest.mark.parametrize("database_name", database_names)
 def test_inserted_numbers(database_name):
     with sqlite3.connect('../db.sqlite') as sqlite_conn, psycopg2.connect(**dsl, cursor_factory=DictCursor) as pg_conn:
         assert fetch_pg_table_row_numbers(pg_conn, database_name) == fetch_sql_table_row_numbers(sqlite_conn, database_name)
+

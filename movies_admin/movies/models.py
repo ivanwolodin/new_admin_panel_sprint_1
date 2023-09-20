@@ -31,7 +31,7 @@ class Person(UUIDMixin, TimeStampedMixin):
         return self.full_name
 
     class Meta:
-        db_table = 'content\'.\'person'
+        db_table = "content\".\"person"
         verbose_name = _('actor')
         verbose_name_plural = _('actors')
 
@@ -43,15 +43,11 @@ class Genre(UUIDMixin, TimeStampedMixin):
 
     name = models.CharField(_('name'), max_length=255)
 
-    # blank=True делает поле необязательным для заполнения.
     description = models.TextField(_('description'), blank=True)
 
     class Meta:
-        # Ваши таблицы находятся в нестандартной схеме.
-        # Это нужно указать в классе модели
 
-        db_table = 'content\'.\'genre'
-        # Следующие два поля отвечают за название модели в интерфейсе
+        db_table = "content\".\"genre"
         verbose_name = _('genre')
         verbose_name_plural = _('genres')
 
@@ -62,7 +58,7 @@ class GenreFilmwork(UUIDMixin):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'content\'.\'genre_film_work'
+        db_table = "content\".\"genre_film_work"
 
 
 class PersonFilmwork(UUIDMixin):
@@ -72,7 +68,7 @@ class PersonFilmwork(UUIDMixin):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'content\'.\'person_film_work'
+        db_table = "content\".\"person_film_work"
         constraints = [
             models.UniqueConstraint(
                 fields=['role', 'person_id', 'film_work_id'],
@@ -120,6 +116,6 @@ class FilmWork(UUIDMixin, TimeStampedMixin):
     )
 
     class Meta:
-        db_table = 'content\'.\'film_work'
+        db_table = "content\".\"film_work"
         verbose_name = _('piece of art')
         verbose_name_plural = _('pieces of arts')
