@@ -8,7 +8,6 @@ from .models import (
 )
 
 
-# Register your models here.
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     pass

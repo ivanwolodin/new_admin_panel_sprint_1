@@ -1,5 +1,3 @@
-# Create your models here.
-
 import uuid
 
 from django.core.exceptions import ValidationError
