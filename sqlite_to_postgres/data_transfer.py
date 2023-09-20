@@ -5,7 +5,7 @@ from uploader import PostgresSaver
 
 class DataTransfer:
     def __init__(self):
-        self._chunk_size = 1000
+        self._chunk_size = 200
         self.postgres_saver_obj = PostgresSaver()
 
     def transfer_data(self) -> None:
@@ -37,6 +37,9 @@ class DataTransfer:
                         {
                             'res': res,
                             'postgres_table': db_dataclass.get('postgres_table'),
+                            'ordered_keys': db_dataclass.get('ordered_keys'),
+                            'string_pattern': db_dataclass.get('string_pattern'),
+                            'postgres_sql_upsert': db_dataclass.get('postgres_sql_upsert'),
                         },
                     )
 

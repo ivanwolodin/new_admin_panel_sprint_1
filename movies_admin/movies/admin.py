@@ -21,6 +21,7 @@ class PersonFilmworkInline(admin.TabularInline):
     model = PersonFilmwork
     autocomplete_fields = ('person', )
 
+
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ('person', )

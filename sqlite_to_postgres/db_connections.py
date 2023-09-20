@@ -1,4 +1,5 @@
 import os
+
 import psycopg2
 import sqlite3
 
@@ -11,12 +12,13 @@ from logger import logger
 load_dotenv()
 
 dsl = {
-        'dbname': os.environ.get('DB_NAME'), 
-        'user': os.environ.get('DB_USER'), 
-        'password': os.environ.get('DB_PASSWORD'), 
-        'host': os.environ.get('DB_HOST'), 
-        'port': os.environ.get('DB_PORT'),
+    'dbname': os.environ.get('DB_NAME'), 
+    'user': os.environ.get('DB_USER'), 
+    'password': os.environ.get('DB_PASSWORD'), 
+    'host': os.environ.get('DB_HOST'), 
+    'port': os.environ.get('DB_PORT'),
 }
+
 
 @contextmanager
 def open_sqlite_connection(file_name: str = 'db.sqlite'):
@@ -29,6 +31,7 @@ def open_sqlite_connection(file_name: str = 'db.sqlite'):
         logger.info('Closing SQLite connection')
         conn.commit()
         conn.close()
+
 
 @contextmanager
 def open_postgres_connection():

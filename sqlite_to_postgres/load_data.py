@@ -1,6 +1,7 @@
 from data_transfer import DataTransfer
 from logger import logger
 
+
 def load_from_sqlite():
     """Основной метод загрузки данных из SQLite в Postgres"""
     data_transfer_obj = DataTransfer()
@@ -8,6 +9,6 @@ def load_from_sqlite():
 
 
 if __name__ == '__main__':
-    logger.info("Starting data transferring")
+    logger.info('Starting data transferring')
     load_from_sqlite()
-    logger.info("Stop data transferring")
+    logger.info('Stop data transferring')
