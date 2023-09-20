@@ -10,8 +10,6 @@ class TimeStampedMixin(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # Этот параметр указывает Django,
-        # что этот класс не является представлением таблицы
         abstract = True
 
 
@@ -57,6 +55,12 @@ class GenreFilmwork(UUIDMixin):
 
     class Meta:
         db_table = "content\".\"genre_film_work"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['genre_id', 'film_work_id'],
+                name='film_work_genre_idx',
+            ),
+        ]
 
 
 class PersonFilmwork(UUIDMixin):
@@ -76,8 +80,8 @@ class PersonFilmwork(UUIDMixin):
 
 
 class FilmWork(UUIDMixin, TimeStampedMixin):
-    genres = models.ManyToManyField(Genre, through='GenreFilmwork')
-    persons = models.ManyToManyField(Person, through='PersonFilmwork')
+    genres = models.ManyToManyField(Genre, through=GenreFilmwork)
+    persons = models.ManyToManyField(Person, through=PersonFilmwork)
 
     def __str__(self):
         return self.title

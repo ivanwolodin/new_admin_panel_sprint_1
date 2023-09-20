@@ -19,11 +19,11 @@ class GenreFilmworkInline(admin.TabularInline):
 
 class PersonFilmworkInline(admin.TabularInline):
     model = PersonFilmwork
-
+    autocomplete_fields = ('person', )
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ('person', )
 
 
 @admin.register(FilmWork)

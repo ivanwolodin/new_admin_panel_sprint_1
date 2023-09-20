@@ -43,4 +43,4 @@ CREATE TABLE IF NOT EXISTS content.genre_film_work (
     created timestamp with time zone
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS film_work_genre ON content.genre_film_work (film_work_id, genre_id);
+CREATE UNIQUE INDEX IF NOT EXISTS film_work_genre_idx ON content.genre_film_work (film_work_id, genre_id);
