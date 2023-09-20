@@ -25,8 +25,7 @@ class DataTransfer:
                     ),
                 )
 
-            while True:
-                chunks = self._cursor.fetchmany(self._chunk_size)
+            while chunks := self._cursor.fetchmany(self._chunk_size):
                 if not chunks:
                     break
 

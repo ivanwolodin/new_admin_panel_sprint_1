@@ -1,4 +1,15 @@
+import logging
+
 from psycopg2.extensions import connection as _connection
+
+FORMAT = '%(asctime)s %(message)s'
+logging.basicConfig(
+    filename='uploader.log', 
+    encoding='utf-8', 
+    level=logging.DEBUG, 
+    format=FORMAT,
+)
+logger = logging.getLogger('postgres_uploader')
 
 
 class PostgresSaver:
@@ -45,10 +56,10 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print('Cannot upsert in film_works. Error: {0}'.format(e))
+            logger.info('Cannot upsert in film_works. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
-            
+
     def _upload_persons(self):
         try:
             args = ','.join(
@@ -70,7 +81,7 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print('Cannot upsert in person. Error: {0}'.format(e))
+            logger.info('Cannot upsert in person. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
 
@@ -97,7 +108,7 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print('Cannot upsert in genre. Error: {0}'.format(e))
+            logger.info('Cannot upsert in genre. Error: {0}'.format(e))
             self._conn.rollback()
             self._conn.close()
 
@@ -124,7 +135,9 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print('Cannot upsert in person_film_work. Error: {0}'.format(e))
+            logger.info(
+                'Cannot upsert in person_film_work. Error: {0}'.format(e),
+            )
             self._conn.rollback()
             self._conn.close()
 
@@ -135,7 +148,7 @@ class PostgresSaver:
                                      (item.id, 
                                       item.genre_id, 
                                       item.film_work_id, 
-                                      item.created_at
+                                      item.created_at,
                                       )).decode() 
                 for item in self._data_to_upload
             )
@@ -150,7 +163,9 @@ class PostgresSaver:
                                 ON CONFLICT (id) DO NOTHING """)
             self._conn.commit()
         except Exception as e:
-            print('Cannot upsert in genre_film_work. Error: {0}'.format(e))
+            logger.info(
+                'Cannot upsert in genre_film_work. Error: {0}'.format(e),
+            )
             self._conn.rollback()
             self._conn.close()
 
@@ -159,4 +174,4 @@ class PostgresSaver:
         try:
             self._function_by_table[data['postgres_table']]()
         except Exception as e:
-            print('Cannot upsert data: Error: {0}'.format(e))
+            logger.info('Cannot upsert data: Error: {0}'.format(e))
